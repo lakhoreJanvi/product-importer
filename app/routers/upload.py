@@ -10,7 +10,7 @@ from uuid import uuid4
 
 router = APIRouter(prefix="/upload", tags=["upload"])
 
-UPLOAD_DIR = "/app/uploads"
+UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.post("/")

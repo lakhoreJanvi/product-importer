@@ -1,21 +1,19 @@
 from celery import Celery
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
-
-broker = os.getenv('CELERY_BROKER_URL', 'redis://redis:6379/1')
-backend = os.getenv('CELERY_RESULT_BACKEND', 'redis://redis:6379/2')
+REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
 celery = Celery(
-    "product_importer",
-    broker=broker,
-    backend=backend,
-    include=["app.tasks"]
+    "tasks",
+    broker=REDIS_URL,
+    backend=REDIS_URL,
 )
 
-celery.conf.task_routes = {
-    "app.tasks.*": {"queue": "import_queue"},
-}
-
-celery.autodiscover_tasks(["app"])
+# Optional: additional config for production
+celery.conf.update(
+    task_serializer='json',
+    result_serializer='json',
+    accept_content=['json'],
+    timezone='UTC',
+    enable_utc=True,
+)

@@ -9,7 +9,7 @@ import time
 load_dotenv()
 
 BATCH_SIZE = 1000
-UPLOAD_DIR = "/usr/src/app/uploads"
+UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @celery.task(bind=True)
@@ -116,7 +116,7 @@ def trigger_webhook(webhook_id: int, job_id: int = None,
         if not wh or not wh.enabled:
             return {"status": "disabled"}
 
-        payload = {"event": wh.event}
+        payload = {"event": wh.event_type}
         if job_id:
             payload["job_id"] = job_id
         if product_id:
